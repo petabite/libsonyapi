@@ -5,6 +5,9 @@ import xml.etree.ElementTree as ET
 
 class Camera(object):
     def __init__(self):
+        """
+        create camera object
+        """
         self.xml_url = self.discover()
         self.name, self.api_version, self.services = self.connect(self.xml_url)
         self.camera_endpoint_url = self.services['camera'] + '/camera'
@@ -13,6 +16,7 @@ class Camera(object):
         if 'startRecMode' in self.available_apis[0]:
             self.do('startRecMode')
         self.available_apis = self.do("getAvailableApiList")['result']
+        self.connected = False
 
     def discover(self):
         """
@@ -37,6 +41,7 @@ class Camera(object):
                 for item in decoded_data.split('\n'):
                     if 'LOCATION' in item:
                         return item.strip().split(' ')[1]  # get location url from ssdp response
+            self.connected = True
         except socket.timeout:
             raise ConnectionError('you are not connected to the camera\'s wifi')
 
@@ -60,12 +65,16 @@ class Camera(object):
         return name, api_version, api_service_urls
 
     def info(self):
+        """
+        returns camera info(name, api version, supported services, available apis) in a dictionary
+        """
         return {
             'name' : self.name,
             'api version' : self.api_version,
             'supported services' : list(self.services.keys()),
             'available apis' : self.available_apis
         }
+        
     def post_request(self, url, method, param = [] ):
         """
         sends post request to url with method and param as json
@@ -80,18 +89,17 @@ class Camera(object):
             }
         request = requests.post(url, json.dumps(json_request))
         response = json.loads(request.content)
-        # print(response)
         if 'error' in list(response.keys()):
             print('Error: ')
             print(response)
         else:
             return response
-    # TODO: response handler, return result of do, etc
-    # the following functions make call to sony camera api
+
     def do(self, method, param=[]):
         """
-        this calls to camera service api, require method and param arg
+        this calls to camera service api, require method and param args
         """
+        # TODO: response handler, return result of do, etc
         response = self.post_request(self.camera_endpoint_url, method, param)
         return response
 
