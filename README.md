@@ -1,39 +1,53 @@
 # libsonyapi
-python binding for the [Sony Camera API](https://developer.sony.com/develop/cameras/)
+
+Python binding for the [Sony Camera API](https://developer.sony.com/develop/cameras/)
 
 ---
 
 # REQUIREMENTS
+
 - a compatible Sony camera (find your camera [here](https://developer.sony.com/develop/cameras/api-information/supported-devices))
 - wifi connection
 
 # INSTALLATION
 
-1. `git clone https://github.com/BugsForDays/libsonyapi.git`
+## `pip install libsonyapi`
+
+**OR FROM SOURCE:**
+
+1. `git clone https://github.com/petabite/libsonyapi.git` or download the [latest release](https://github.com/petabite/libsonyapi/releases)
 2. `cd libsonyapi`
 3. `python setup.py install`
 
-# QUICKSTART
-``` python
-import libsonyapi
-from libsonyapi import Actions
-import requests
+Requires:
 
-camera = libsonyapi.Camera() # create camera instance
-camera_info = camera.info() # get camera camera_info
+- [requests](https://requests.readthedocs.io/en/master/user/install/#install)
+
+# QUICKSTART
+
+```python
+from libsonyapi.camera import Camera
+from libsonyapi.actions import Actions
+
+camera = Camera()  # create camera instance
+camera_info = camera.info()  # get camera camera_info
 print(camera_info)
 
-print(camera.name) # print name of camera
-print(camera.api_version) # print api version of camera
+print(camera.name)  # print name of camera
+print(camera.api_version)  # print api version of camera
 
-camera.do(Actions.actTakePicture) # take a picture
+camera.do(Actions.actTakePicture)  # take a picture
 
 fNumber = camera.do(Actions.getFNumber)
-print(fNumber) # prints response from camera, which includes f-number
+print(fNumber)  # prints fnumber
 
-camera.do(Actions.setFNumber, '5') # set fnumber to 5
-
+camera.do(Actions.setFNumber, "5")  # set aperture to 5
 ```
+
+# CHANGELOG
+
+- **v1.0 - 8/22/20**
+  - first official release
 
 # HOW IT WORKS
 
@@ -44,6 +58,7 @@ camera.do(Actions.setFNumber, '5') # set fnumber to 5
 # DOCS
 
 ##### Objects
+
 - libsonyapi.Camera()
   - init a Camera object
 - libsonyapi.Actions()
@@ -73,14 +88,15 @@ camera.do(Actions.setFNumber, '5') # set fnumber to 5
   - Refer to [Sony Camera API](https://developer.sony.com/develop/cameras/) docs for function of method and supported params
 
 # EXAMPLES
-- [**pylapse**](https://github.com/BugsForDays/pylapse) - uses libsonyapi to automatically capture pictures for a timelapse
+
+- [**pylapse**](https://github.com/petabite/pylapse) - uses libsonyapi to automatically capture pictures for a timelapse
 
 # API LIST
 
 ###### The table below shows the name of variables in the libsonyapi Actions class and its corresponding Sony Camera API method name
 
 | libsonyapi Variable Name         | Sony API Method Name               |
-|----------------------------------|------------------------------------|
+| -------------------------------- | ---------------------------------- |
 | setShootMode                     | 'setShootMode'                     |
 | getShootMode                     | 'getShootMode'                     |
 | getSupportedShootMode            | 'getSupportedShootMode'            |
